@@ -2,10 +2,10 @@ data:
   window:
     start: "2013-01-02"
     end: "2017-12-29"
-  feature_horizon: 20  # days for node feature vector
+  feature_horizon: 30  # Increased window to capture more temporal patterns
 graph:
-  corr_threshold: 0.5  # or null to use top_k
-  top_k: 10
+  corr_threshold: null  # Using top_k instead of threshold
+  top_k: 20  # Increase connections per node
   use_mst: true  # force connectivity with minimum spanning tree
 model:
   type: "gcn"  # | "gat"
@@ -16,7 +16,7 @@ model:
 train:
   epochs: 300
   batch_size: 1  # full-batch graph learning
-  lr: 1e-3
-  weight_decay: 1e-5
-  early_stop_patience: 20
+  lr: 5e-4  # Lower learning rate for better stability
+  weight_decay: 1e-4  # Increased regularization
+  early_stop_patience: 30  # More patience for finding optimal weights
   random_seed: 42

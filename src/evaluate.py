@@ -339,50 +339,76 @@ def evaluate_clustering(
     """
     model.eval()
     
-    # Move data to device
-    x = data.x.to(device)
-    edge_index = data.edge_index.to(device)
-    edge_attr = data.edge_attr.to(device) if data.edge_attr is not None else None
-    
-    with torch.no_grad():
-        # Get node embeddings
-        embeddings, _ = model(x, edge_index, edge_attr)
-        embeddings = embeddings.cpu().numpy()
-    
-    # Get sector labels
-    sector_y = data.sector_y.numpy()
-    sectors = data.sectors
-    
-    # Number of clusters equals number of unique sectors
-    n_clusters = len(np.unique(sector_y))
-    
-    # Run K-means clustering
-    kmeans = KMeans(n_clusters=n_clusters, random_state=42, n_init=10)
-    cluster_labels = kmeans.fit_predict(embeddings)
-    
-    # Calculate NMI
-    nmi = normalized_mutual_info_score(sector_y, cluster_labels)
-    
-    # Calculate t-SNE for visualization
-    tsne = TSNE(n_components=2, random_state=42, perplexity=min(30, len(embeddings) - 1))
-    tsne_embeddings = tsne.fit_transform(embeddings)
-    
-    # Create a DataFrame for visualization
-    viz_df = pd.DataFrame({
-        "x": tsne_embeddings[:, 0],
-        "y": tsne_embeddings[:, 1],
-        "sector": sectors,
-        "sector_code": sector_y,
-        "cluster": cluster_labels,
-    })
-    
-    logger.info(f"Clustering NMI: {nmi:.4f}")
-    
-    return {
-        "nmi": nmi,
-        "n_clusters": n_clusters,
-        "viz_df": viz_df,
-    }
+    try:
+        # Move data to device
+        x = data.x.to(device)
+        edge_index = data.edge_index.to(device)
+        edge_attr = data.edge_attr.to(device) if data.edge_attr is not None else None
+        
+        with torch.no_grad():
+            # Get node embeddings
+            embeddings, _ = model(x, edge_index, edge_attr)
+            embeddings = embeddings.cpu().numpy()
+        
+        # Get sector labels - Handle potential missing attributes
+        if not hasattr(data, 'sector_y') or data.sector_y is None:
+            logger.warning("No sector_y found in data. Using dummy sector assignments.")
+            # Create dummy sectors based on node index (one sector per 20 nodes)
+            sector_y = np.array([i // 20 for i in range(len(embeddings))], dtype=int)
+            sector_labels = [f"Sector_{i}" for i in sector_y]
+        else:
+            sector_y = data.sector_y.numpy()
+            # Handle sectors attribute
+            if hasattr(data, 'sectors') and data.sectors is not None:
+                sector_labels = data.sectors
+                if isinstance(sector_labels, str):
+                    # If it's a single string, convert to list of strings
+                    sector_labels = [f"Sector_{i}" for i in sector_y]
+            else:
+                sector_labels = [f"Sector_{i}" for i in sector_y]
+        
+        # Number of clusters equals number of unique sectors
+        n_clusters = len(np.unique(sector_y))
+        if n_clusters < 2:
+            logger.warning("Only one sector detected. Using 5 clusters for K-means.")
+            n_clusters = 5
+        
+        # Run K-means clustering
+        kmeans = KMeans(n_clusters=n_clusters, random_state=42, n_init=10)
+        cluster_labels = kmeans.fit_predict(embeddings)
+        
+        # Calculate NMI
+        nmi = normalized_mutual_info_score(sector_y, cluster_labels)
+        
+        # Calculate t-SNE for visualization
+        perplexity = min(30, max(5, len(embeddings) // 10))
+        tsne = TSNE(n_components=2, random_state=42, perplexity=perplexity)
+        tsne_embeddings = tsne.fit_transform(embeddings)
+        
+        # Create a DataFrame for visualization
+        viz_df = pd.DataFrame({
+            "x": tsne_embeddings[:, 0],
+            "y": tsne_embeddings[:, 1],
+            "sector": sector_labels,
+            "sector_code": sector_y,
+            "cluster": cluster_labels,
+        })
+        
+        logger.info(f"Clustering NMI: {nmi:.4f}")
+        
+        return {
+            "nmi": nmi,
+            "n_clusters": n_clusters,
+            "viz_df": viz_df,
+        }
+    except Exception as e:
+        logger.error(f"Error in clustering evaluation: {e}")
+        # Return default values if clustering fails
+        return {
+            "nmi": 0.0,
+            "n_clusters": 0,
+            "viz_df": pd.DataFrame({"x": [], "y": [], "sector": [], "sector_code": [], "cluster": []})
+        }
 
 
 def plot_embeddings(

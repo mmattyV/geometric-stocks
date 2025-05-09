@@ -375,23 +375,33 @@ def train_model(
         # Train on each date in the training set
         for date in tqdm(train_dates, desc=f"Epoch {epoch+1}/{n_epochs} - Training"):
             try:
-                # Create features and labels for this date
+                logger.debug(f"Creating features for training date {date}")
                 features, labels = create_features_and_labels(
-                    data, log_returns, date, feature_horizon
+                    data, log_returns, date, feature_horizon, device=device
                 )
                 
-                # Update data object with new features and labels
+                # Set features and labels as data attributes
                 data.x = features
                 data.y = labels
                 
-                # Calculate class weights if needed (to handle imbalance)
-                if config.get("use_class_weights", True):
-                    n_neg = (labels == 0).sum().item()
-                    n_pos = (labels == 1).sum().item()
-                    if n_neg > 0 and n_pos > 0:
-                        class_weights = torch.tensor([1.0, n_neg / n_pos])
+                # Calculate class weights to balance the dataset
+                # This is critical for financial data where classes are often imbalanced
+                n_neg = (labels == 0).sum().item()
+                n_pos = (labels == 1).sum().item()
+                if n_neg > 0 and n_pos > 0:
+                    # Using sqrt to moderate the weight difference
+                    weight_ratio = float(np.sqrt(n_neg / n_pos) if n_neg > n_pos else np.sqrt(n_pos / n_neg))
+                    if n_neg > n_pos:
+                        class_weights = torch.tensor([1.0, weight_ratio], dtype=torch.float32)
                     else:
-                        class_weights = None
+                        class_weights = torch.tensor([weight_ratio, 1.0], dtype=torch.float32)
+                    # Only log the first few weights in each epoch to reduce verbosity
+                    if epoch == 0 and batch_idx < 3:  
+                        logger.info(f"Sample class weights: {class_weights} (neg:{n_neg}, pos:{n_pos})")
+                    # Every 100 batches, log a summary of class distribution
+                    if batch_idx % 100 == 0 and batch_idx > 0:
+                        logger.debug(f"Class distribution at batch {batch_idx}: neg:{n_neg}, pos:{n_pos}")
+                        
                 else:
                     class_weights = None
                 
@@ -405,7 +415,11 @@ def train_model(
                 train_balanced_accs.append(balanced_acc)
             
             except Exception as e:
-                logger.warning(f"Skipping training date {date}: {e}")
+                # Only log if not the expected 'Not enough data' warnings at the beginning of the dataset
+                if "Not enough data before" not in str(e) or "Need at least 30 days" not in str(e):
+                    logger.warning(f"Skipping training date {date}: {e}")
+                else:
+                    logger.debug(f"Skipping initial training date {date}: insufficient history")
         
         # Calculate average metrics
         avg_train_loss = np.mean(train_losses) if train_losses else float("nan")
@@ -432,14 +446,18 @@ def train_model(
                 data.x = features
                 data.y = labels
                 
-                # Calculate class weights if needed
-                if config.get("use_class_weights", True):
-                    n_neg = (labels == 0).sum().item()
-                    n_pos = (labels == 1).sum().item()
-                    if n_neg > 0 and n_pos > 0:
-                        class_weights = torch.tensor([1.0, n_neg / n_pos])
+                # Calculate class weights to balance the dataset (same as in training)
+                n_neg = (labels == 0).sum().item()
+                n_pos = (labels == 1).sum().item()
+                if n_neg > 0 and n_pos > 0:
+                    # Using sqrt to moderate the weight difference
+                    weight_ratio = float(np.sqrt(n_neg / n_pos) if n_neg > n_pos else np.sqrt(n_pos / n_neg))
+                    if n_neg > n_pos:
+                        class_weights = torch.tensor([1.0, weight_ratio], dtype=torch.float32)
                     else:
-                        class_weights = None
+                        class_weights = torch.tensor([weight_ratio, 1.0], dtype=torch.float32)
+                    # Only log in debug mode for validation
+                    logger.debug(f"Validation class distribution: neg:{n_neg}, pos:{n_pos}")
                 else:
                     class_weights = None
                 
@@ -453,7 +471,11 @@ def train_model(
                 val_balanced_accs.append(balanced_acc)
             
             except Exception as e:
-                logger.warning(f"Skipping validation date {date}: {e}")
+                # Only log if not the expected 'Not enough data' warnings at the beginning of the dataset
+                if "Not enough data before" not in str(e) or "Need at least 30 days" not in str(e):
+                    logger.warning(f"Skipping validation date {date}: {e}")
+                else:
+                    logger.debug(f"Skipping initial validation date {date}: insufficient history")
         
         # Calculate average metrics
         avg_val_loss = np.mean(val_losses) if val_losses else float("nan")

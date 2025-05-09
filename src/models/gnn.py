@@ -21,7 +21,8 @@ class GCN(nn.Module):
     """Graph Convolutional Network model.
     
     A 2-layer GCN with configurable hidden dimensions, ReLU activation,
-    and dropout. Produces node embeddings and binary classification logits.
+    batch normalization, and dropout. Includes skip connections for better
+    gradient flow. Produces node embeddings and binary classification logits.
     
     Args:
         in_channels: Number of input features.
@@ -41,11 +42,16 @@ class GCN(nn.Module):
         """
         super().__init__()
         
+        # Initial projection to hidden dimension (for skip connection)
+        self.lin0 = nn.Linear(in_channels, hidden_channels)
+        
         # First GCN layer
         self.conv1 = GCNConv(in_channels, hidden_channels)
+        self.bn1 = nn.BatchNorm1d(hidden_channels)
         
         # Second GCN layer
         self.conv2 = GCNConv(hidden_channels, hidden_channels)
+        self.bn2 = nn.BatchNorm1d(hidden_channels)
         
         # Binary classifier head
         self.classifier = nn.Linear(hidden_channels, 2)
@@ -57,8 +63,9 @@ class GCN(nn.Module):
         self.hidden_channels = hidden_channels
         
         logger.info(
-            f"Initialized GCN with {in_channels} input features, "
-            f"{hidden_channels} hidden dimensions, and dropout {dropout}"
+            f"Initialized Enhanced GCN with {in_channels} input features, "
+            f"{hidden_channels} hidden dimensions, batch normalization, "
+            f"skip connections, and dropout {dropout}"
         )
 
     def forward(
@@ -76,16 +83,24 @@ class GCN(nn.Module):
                 - embeddings: Node embeddings of shape [num_nodes, hidden_channels].
                 - logits: Classification logits of shape [num_nodes, 2].
         """
-        # First GCN layer with ReLU and dropout
-        x = self.conv1(x, edge_index, edge_weight)
-        x = F.relu(x)
-        x = self.dropout(x)
+        # Input projection for skip connection
+        x0 = self.lin0(x)
         
-        # Second GCN layer
-        x = self.conv2(x, edge_index, edge_weight)
+        # First GCN layer with BatchNorm, ReLU and dropout
+        x1 = self.conv1(x, edge_index, edge_weight)
+        x1 = self.bn1(x1)
+        x1 = F.relu(x1)
+        x1 = self.dropout(x1)
         
-        # Store node embeddings
-        embeddings = x
+        # Skip connection from input to first layer
+        x1 = x1 + x0
+        
+        # Second GCN layer with BatchNorm
+        x2 = self.conv2(x1, edge_index, edge_weight)
+        x2 = self.bn2(x2)
+        
+        # Skip connection from first layer to second layer
+        embeddings = x2 + x1
         
         # Apply classifier head for binary classification
         logits = self.classifier(embeddings)

@@ -1,0 +1,22 @@
+data:
+  window:
+    start: "2013-01-02"
+    end: "2017-12-29"
+  feature_horizon: 20  # days for node feature vector
+graph:
+  corr_threshold: 0.5  # or null to use top_k
+  top_k: 10
+  use_mst: true  # force connectivity with minimum spanning tree
+model:
+  type: "gcn"  # | "gat"
+  hidden_dim: 64
+  dropout: 0.2
+  gat_heads: 8
+  gat_dim_per_head: 8
+train:
+  epochs: 300
+  batch_size: 1  # full-batch graph learning
+  lr: 1e-3
+  weight_decay: 1e-5
+  early_stop_patience: 20
+  random_seed: 42

@@ -1,0 +1,53 @@
+# .cursorrules – S&P 500 GNN Project
+You are an AI assistant working inside the **geometric-stocks** repository.  
+Follow every instruction in this rule-set whenever you generate, modify, or explain code.
+
+---
+
+## 1  Data & Reproducibility
+- **Only** read data shipped in `data/raw/` that came from the Kaggle dataset **camnugent/sandp500**.  
+  Never fetch live data or call external APIs except `kaggle datasets download`.
+- Restrict every analysis to the fixed window conssisting of data in the Kaggle dataset **camnugent/sandp500**.
+- Respect relative paths; avoid hard-coding absolute locations.
+- Set global random seeds (`numpy`, `torch`, `random`) to **42** in any executable script.
+
+## 2  Coding Standards
+- Target **Python 3.11** and format with **black** (line length = 88).
+- Use **type hints** for every public function, class, and module-level variable.
+- Write Google-style docstrings (`"""Summary … Args: … Returns: …"""`).
+- Prefer functional, modular design; introduce classes only for coherent stateful abstractions.
+- Replace `print` with the standard `logging` library (level INFO by default).
+- Keep functions ≤ 50 logical lines and files ≤ 400 logical lines.
+
+## 3  Project Structure
+- Conform to the directory tree defined in the tech spec (`src/`, `data/`, `configs/`, etc.).
+- Any script with a `main()` must expose a CLI via **argparse**.
+- All hyper-parameters live in **`configs/config.yaml`**; never hard-code them in source files.
+- Write GPU-aware code that falls back cleanly to CPU (`device = torch.device("cuda" if torch.cuda.is_available() else "cpu")`).
+- We are developing on a M2 chip, so please ensure that code is compatible with Apple Silicon.
+- Load onto the M2 chip with `arch -arm64` if possible for development.
+
+## 4  Graph Construction
+- Build edges from **absolute Pearson correlations** on log-returns.
+- Apply either a **|ρ| ≥ 0 . 5 threshold** *or* keep the **top K = 10** edges per node, configurable at runtime.
+- Guarantee graph connectivity by merging with a **minimum-spanning tree**.
+
+## 5  GNN Models
+- Provide exactly two model classes in `models/gnn.py`:  
+  **`GCN`** (2 layers, hidden 64, ReLU, dropout 0 . 2) and **`GAT`** (2 layers, 8 heads, 8 dims/head).  
+  Both must subclass `torch.nn.Module` and use **torch-geometric** layers exclusively.
+- Produce node-level embeddings (`h`) and a binary classifier head for next-day return direction.
+
+## 6  Non-Goals
+- **Do not** generate unit tests, integration tests, benchmarks, CI, or CD workflows.
+- **Do not** implement trading, portfolio back-tests, or live inference pipelines.
+
+## 7  Style Guide Extras
+- Use **snake_case** for file, function, and variable names; **UPPER_SNAKE_CASE** for constants.
+- Interpolate strings with **f-strings**.
+- Record actionable TODOs in the format `# TODO(vc): message…` (initials optional).
+- Place imports in three blocks: stdlib, third-party, local; sort with `isort`.
+
+## 8  Example One-Liner
+```bash
+python src/train.py --config configs/config.yaml --model gcn

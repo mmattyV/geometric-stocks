@@ -1,0 +1,506 @@
+symbol,sector
+A,Healthcare
+AAL,Healthcare
+AAP,Healthcare
+AAPL,Healthcare
+ABBV,Healthcare
+ABC,Healthcare
+ABT,Healthcare
+ACN,Healthcare
+ADBE,Healthcare
+ADI,Healthcare
+ADM,Healthcare
+ADP,Healthcare
+ADS,Healthcare
+ADSK,Healthcare
+AEE,Healthcare
+AEP,Healthcare
+AES,Healthcare
+AET,Healthcare
+AFL,Healthcare
+AGN,Healthcare
+AIG,Healthcare
+AIV,Healthcare
+AIZ,Healthcare
+AJG,Healthcare
+AKAM,Healthcare
+ALB,Healthcare
+ALGN,Healthcare
+ALK,Healthcare
+ALL,Healthcare
+ALLE,Healthcare
+ALXN,Healthcare
+AMAT,Healthcare
+AMD,Healthcare
+AME,Healthcare
+AMG,Healthcare
+AMGN,Healthcare
+AMP,Healthcare
+AMT,Healthcare
+AMZN,Healthcare
+ANDV,Healthcare
+ANSS,Healthcare
+ANTM,Healthcare
+AON,Healthcare
+AOS,Healthcare
+APA,Healthcare
+APC,Healthcare
+APD,Healthcare
+APH,Healthcare
+APTV,Healthcare
+ARE,Healthcare
+ARNC,Healthcare
+ATVI,Healthcare
+AVB,Healthcare
+AVGO,Healthcare
+AVY,Healthcare
+AWK,Healthcare
+AXP,Healthcare
+AYI,Healthcare
+AZO,Healthcare
+BA,Finance
+BAC,Finance
+BAX,Finance
+BBT,Finance
+BBY,Finance
+BDX,Finance
+BEN,Finance
+BF.B,Finance
+BHF,Finance
+BHGE,Finance
+BIIB,Finance
+BK,Finance
+BLK,Finance
+BLL,Finance
+BMY,Finance
+BRK.B,Finance
+BSX,Finance
+BWA,Finance
+BXP,Finance
+C,Technology
+CA,Technology
+CAG,Technology
+CAH,Technology
+CAT,Technology
+CB,Technology
+CBG,Technology
+CBOE,Technology
+CBS,Technology
+CCI,Technology
+CCL,Technology
+CDNS,Technology
+CELG,Technology
+CERN,Technology
+CF,Technology
+CFG,Technology
+CHD,Technology
+CHK,Technology
+CHRW,Technology
+CHTR,Technology
+CI,Technology
+CINF,Technology
+CL,Technology
+CLX,Technology
+CMA,Technology
+CMCSA,Technology
+CME,Technology
+CMG,Technology
+CMI,Technology
+CMS,Technology
+CNC,Technology
+CNP,Technology
+COF,Technology
+COG,Technology
+COL,Technology
+COO,Technology
+COP,Technology
+COST,Technology
+COTY,Technology
+CPB,Technology
+CRM,Technology
+CSCO,Technology
+CSRA,Technology
+CSX,Technology
+CTAS,Technology
+CTL,Technology
+CTSH,Technology
+CTXS,Technology
+CVS,Technology
+CVX,Technology
+CXO,Technology
+D,Consumer Cyclical
+DAL,Consumer Cyclical
+DE,Consumer Cyclical
+DFS,Consumer Cyclical
+DG,Consumer Cyclical
+DGX,Consumer Cyclical
+DHI,Consumer Cyclical
+DHR,Consumer Cyclical
+DIS,Consumer Cyclical
+DISCA,Consumer Cyclical
+DISCK,Consumer Cyclical
+DISH,Consumer Cyclical
+DLR,Consumer Cyclical
+DLTR,Consumer Cyclical
+DOV,Consumer Cyclical
+DPS,Consumer Cyclical
+DRE,Consumer Cyclical
+DRI,Consumer Cyclical
+DTE,Consumer Cyclical
+DUK,Consumer Cyclical
+DVA,Consumer Cyclical
+DVN,Consumer Cyclical
+DWDP,Consumer Cyclical
+DXC,Consumer Cyclical
+EA,Energy
+EBAY,Energy
+ECL,Energy
+ED,Energy
+EFX,Energy
+EIX,Energy
+EL,Energy
+EMN,Energy
+EMR,Energy
+EOG,Energy
+EQIX,Energy
+EQR,Energy
+EQT,Energy
+ES,Energy
+ESRX,Energy
+ESS,Energy
+ETFC,Energy
+ETN,Energy
+ETR,Energy
+EVHC,Energy
+EW,Energy
+EXC,Energy
+EXPD,Energy
+EXPE,Energy
+EXR,Energy
+F,Finance
+FAST,Finance
+FB,Finance
+FBHS,Finance
+FCX,Finance
+FDX,Finance
+FE,Finance
+FFIV,Finance
+FIS,Finance
+FISV,Finance
+FITB,Finance
+FL,Finance
+FLIR,Finance
+FLR,Finance
+FLS,Finance
+FMC,Finance
+FOX,Finance
+FOXA,Finance
+FRT,Finance
+FTI,Finance
+FTV,Finance
+GD,Consumer Goods
+GE,Consumer Goods
+GGP,Consumer Goods
+GILD,Consumer Goods
+GIS,Consumer Goods
+GLW,Consumer Goods
+GM,Consumer Goods
+GOOG,Consumer Goods
+GOOGL,Consumer Goods
+GPC,Consumer Goods
+GPN,Consumer Goods
+GPS,Consumer Goods
+GRMN,Consumer Goods
+GS,Consumer Goods
+GT,Consumer Goods
+GWW,Consumer Goods
+HAL,Industrial
+HAS,Industrial
+HBAN,Industrial
+HBI,Industrial
+HCA,Industrial
+HCN,Industrial
+HCP,Industrial
+HD,Industrial
+HES,Industrial
+HIG,Industrial
+HII,Industrial
+HLT,Industrial
+HOG,Industrial
+HOLX,Industrial
+HON,Industrial
+HP,Industrial
+HPE,Industrial
+HPQ,Industrial
+HRB,Industrial
+HRL,Industrial
+HRS,Industrial
+HSIC,Industrial
+HST,Industrial
+HSY,Industrial
+HUM,Industrial
+IBM,Technology
+ICE,Technology
+IDXX,Technology
+IFF,Technology
+ILMN,Technology
+INCY,Technology
+INFO,Technology
+INTC,Technology
+INTU,Technology
+IP,Technology
+IPG,Technology
+IQV,Technology
+IR,Technology
+IRM,Technology
+ISRG,Technology
+IT,Technology
+ITW,Technology
+IVZ,Technology
+JBHT,Healthcare
+JCI,Healthcare
+JEC,Healthcare
+JNJ,Healthcare
+JNPR,Healthcare
+JPM,Healthcare
+JWN,Healthcare
+K,Energy
+KEY,Energy
+KHC,Energy
+KIM,Energy
+KLAC,Energy
+KMB,Energy
+KMI,Energy
+KMX,Energy
+KO,Energy
+KORS,Energy
+KR,Energy
+KSS,Energy
+KSU,Energy
+L,Real Estate
+LB,Real Estate
+LEG,Real Estate
+LEN,Real Estate
+LH,Real Estate
+LKQ,Real Estate
+LLL,Real Estate
+LLY,Real Estate
+LMT,Real Estate
+LNC,Real Estate
+LNT,Real Estate
+LOW,Real Estate
+LRCX,Real Estate
+LUK,Real Estate
+LUV,Real Estate
+LYB,Real Estate
+M,Industrial
+MA,Industrial
+MAA,Industrial
+MAC,Industrial
+MAR,Industrial
+MAS,Industrial
+MAT,Industrial
+MCD,Industrial
+MCHP,Industrial
+MCK,Industrial
+MCO,Industrial
+MDLZ,Industrial
+MDT,Industrial
+MET,Industrial
+MGM,Industrial
+MHK,Industrial
+MKC,Industrial
+MLM,Industrial
+MMC,Industrial
+MMM,Industrial
+MNST,Industrial
+MO,Industrial
+MON,Industrial
+MOS,Industrial
+MPC,Industrial
+MRK,Industrial
+MRO,Industrial
+MS,Industrial
+MSFT,Industrial
+MSI,Industrial
+MTB,Industrial
+MTD,Industrial
+MU,Industrial
+MYL,Industrial
+NAVI,Finance
+NBL,Finance
+NCLH,Finance
+NDAQ,Finance
+NEE,Finance
+NEM,Finance
+NFLX,Finance
+NFX,Finance
+NI,Finance
+NKE,Finance
+NLSN,Finance
+NOC,Finance
+NOV,Finance
+NRG,Finance
+NSC,Finance
+NTAP,Finance
+NTRS,Finance
+NUE,Finance
+NVDA,Finance
+NWL,Finance
+NWS,Finance
+NWSA,Finance
+O,Communication
+OKE,Communication
+OMC,Communication
+ORCL,Communication
+ORLY,Communication
+OXY,Communication
+PAYX,Utilities
+PBCT,Utilities
+PCAR,Utilities
+PCG,Utilities
+PCLN,Utilities
+PDCO,Utilities
+PEG,Utilities
+PEP,Utilities
+PFE,Utilities
+PFG,Utilities
+PG,Utilities
+PGR,Utilities
+PH,Utilities
+PHM,Utilities
+PKG,Utilities
+PKI,Utilities
+PLD,Utilities
+PM,Utilities
+PNC,Utilities
+PNR,Utilities
+PNW,Utilities
+PPG,Utilities
+PPL,Utilities
+PRGO,Utilities
+PRU,Utilities
+PSA,Utilities
+PSX,Utilities
+PVH,Utilities
+PWR,Utilities
+PX,Utilities
+PXD,Utilities
+PYPL,Utilities
+QCOM,Technology
+QRVO,Technology
+RCL,Consumer Goods
+RE,Consumer Goods
+REG,Consumer Goods
+REGN,Consumer Goods
+RF,Consumer Goods
+RHI,Consumer Goods
+RHT,Consumer Goods
+RJF,Consumer Goods
+RL,Consumer Goods
+RMD,Consumer Goods
+ROK,Consumer Goods
+ROP,Consumer Goods
+ROST,Consumer Goods
+RRC,Consumer Goods
+RSG,Consumer Goods
+RTN,Consumer Goods
+SBAC,Consumer Cyclical
+SBUX,Consumer Cyclical
+SCG,Consumer Cyclical
+SCHW,Consumer Cyclical
+SEE,Consumer Cyclical
+SHW,Consumer Cyclical
+SIG,Consumer Cyclical
+SJM,Consumer Cyclical
+SLB,Consumer Cyclical
+SLG,Consumer Cyclical
+SNA,Consumer Cyclical
+SNI,Consumer Cyclical
+SNPS,Consumer Cyclical
+SO,Consumer Cyclical
+SPG,Consumer Cyclical
+SPGI,Consumer Cyclical
+SRCL,Consumer Cyclical
+SRE,Consumer Cyclical
+STI,Consumer Cyclical
+STT,Consumer Cyclical
+STX,Consumer Cyclical
+STZ,Consumer Cyclical
+SWK,Consumer Cyclical
+SWKS,Consumer Cyclical
+SYF,Consumer Cyclical
+SYK,Consumer Cyclical
+SYMC,Consumer Cyclical
+SYY,Consumer Cyclical
+T,Communication
+TAP,Communication
+TDG,Communication
+TEL,Communication
+TGT,Communication
+TIF,Communication
+TJX,Communication
+TMK,Communication
+TMO,Communication
+TPR,Communication
+TRIP,Communication
+TROW,Communication
+TRV,Communication
+TSCO,Communication
+TSN,Communication
+TSS,Communication
+TWX,Communication
+TXN,Communication
+TXT,Communication
+UA,Utilities
+UAA,Utilities
+UAL,Utilities
+UDR,Utilities
+UHS,Utilities
+ULTA,Utilities
+UNH,Utilities
+UNM,Utilities
+UNP,Utilities
+UPS,Utilities
+URI,Utilities
+USB,Utilities
+UTX,Utilities
+V,Industrial
+VAR,Industrial
+VFC,Industrial
+VIAB,Industrial
+VLO,Industrial
+VMC,Industrial
+VNO,Industrial
+VRSK,Industrial
+VRSN,Industrial
+VRTX,Industrial
+VTR,Industrial
+VZ,Industrial
+WAT,Finance
+WBA,Finance
+WDC,Finance
+WEC,Finance
+WFC,Finance
+WHR,Finance
+WLTW,Finance
+WM,Finance
+WMB,Finance
+WMT,Finance
+WRK,Finance
+WU,Finance
+WY,Finance
+WYN,Finance
+WYNN,Finance
+XEC,Technology
+XEL,Technology
+XL,Technology
+XLNX,Technology
+XOM,Technology
+XRAY,Technology
+XRX,Technology
+XYL,Technology
+YUM,Consumer Goods
+ZBH,Healthcare
+ZION,Healthcare
+ZTS,Healthcare

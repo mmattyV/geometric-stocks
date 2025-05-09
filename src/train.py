@@ -377,7 +377,7 @@ def train_model(
             try:
                 logger.debug(f"Creating features for training date {date}")
                 features, labels = create_features_and_labels(
-                    data, log_returns, date, feature_horizon, device=device
+                    data, log_returns, date, feature_horizon
                 )
                 
                 # Set features and labels as data attributes
@@ -395,12 +395,12 @@ def train_model(
                         class_weights = torch.tensor([1.0, weight_ratio], dtype=torch.float32)
                     else:
                         class_weights = torch.tensor([weight_ratio, 1.0], dtype=torch.float32)
-                    # Only log the first few weights in each epoch to reduce verbosity
-                    if epoch == 0 and batch_idx < 3:  
+                    # Only log a few sample weights in the first epoch
+                    if epoch == 0 and len(train_losses) < 3:  
                         logger.info(f"Sample class weights: {class_weights} (neg:{n_neg}, pos:{n_pos})")
-                    # Every 100 batches, log a summary of class distribution
-                    if batch_idx % 100 == 0 and batch_idx > 0:
-                        logger.debug(f"Class distribution at batch {batch_idx}: neg:{n_neg}, pos:{n_pos}")
+                    # Occasionally log class distribution summary (based on number of processed dates)
+                    if len(train_losses) % 100 == 0 and len(train_losses) > 0:
+                        logger.debug(f"Class distribution (processed {len(train_losses)} dates): neg:{n_neg}, pos:{n_pos})")
                         
                 else:
                     class_weights = None

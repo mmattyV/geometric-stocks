@@ -92,15 +92,22 @@ class GCN(nn.Module):
         x1 = F.relu(x1)
         x1 = self.dropout(x1)
         
-        # Skip connection from input to first layer
-        x1 = x1 + x0
+        # Apply L2 normalization to stabilize financial time-series features
+        x1 = F.normalize(x1, p=2, dim=1)
+        
+        # Skip connection from input to first layer (with scaling to prevent dominating)
+        x1 = x1 + 0.2 * x0
         
         # Second GCN layer with BatchNorm
         x2 = self.conv2(x1, edge_index, edge_weight)
         x2 = self.bn2(x2)
+        x2 = self.dropout(x2)  # Add dropout after second layer too
         
-        # Skip connection from first layer to second layer
-        embeddings = x2 + x1
+        # Apply L2 normalization again
+        x2 = F.normalize(x2, p=2, dim=1)
+        
+        # Skip connection from first layer to second layer (with scaling)
+        embeddings = x2 + 0.5 * x1
         
         # Apply classifier head for binary classification
         logits = self.classifier(embeddings)

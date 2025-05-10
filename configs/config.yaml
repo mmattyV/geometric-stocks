@@ -9,14 +9,20 @@ graph:
   use_mst: true  # force connectivity with minimum spanning tree
 model:
   type: "gcn"  # | "gat"
-  hidden_dim: 64
-  dropout: 0.2
+  hidden_dim: 16  # Drastically reduce model capacity
+  dropout: 0.5  # Heavy dropout
   gat_heads: 8
   gat_dim_per_head: 8
 train:
-  epochs: 300
+  epochs: 100   # Fewer epochs to prevent overfitting
   batch_size: 1  # full-batch graph learning
-  lr: 5e-4  # Lower learning rate for better stability
-  weight_decay: 1e-4  # Increased regularization
-  early_stop_patience: 30  # More patience for finding optimal weights
+  lr: 1e-3      # Start with higher learning rate 
+  weight_decay: 5e-4  # Much stronger regularization
+  early_stop_patience: 10  # Stop earlier to prevent overfitting
   random_seed: 42
+time_aware_training:
+  enabled: true
+  # Use rolling window training - critical for financial time series!
+  window_size: 60    # Train on 60 trading days (~3 months)
+  stride: 20        # Shift window by 20 days between training rounds
+  future_gap: 5      # Ensure 5 days between train and validation

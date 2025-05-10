@@ -152,9 +152,28 @@ def load_model(
 
     logger.info(f"Loading {model_type.upper()} model from {best_model_path}")
     
-    # Initialize model
-    model = get_model(model_type, in_channels, config["model"])
-    model.load_state_dict(torch.load(best_model_path, map_location=device))
+    # Load the model state dict first to check dimensions
+    state_dict = torch.load(best_model_path, map_location=device)
+    
+    # Override the hidden_dim in config to match the trained model
+    # This ensures we create a model with matching dimensions to the saved weights
+    if "lin0.weight" in state_dict:
+        # Detect the hidden dimension from the saved model
+        trained_hidden_dim = state_dict["lin0.weight"].shape[0]
+        logger.info(f"Detected trained model hidden dimension: {trained_hidden_dim}")
+        
+        # Create a copy of the config to avoid modifying the original
+        model_config = config["model"].copy()
+        model_config["hidden_dim"] = trained_hidden_dim
+        
+        # Initialize model with the correct hidden dimension
+        model = get_model(model_type, in_channels, model_config)
+    else:
+        # Fallback to using the config as is
+        model = get_model(model_type, in_channels, config["model"])
+    
+    # Now load the state dict
+    model.load_state_dict(state_dict)
     model = model.to(device)
     model.eval()
 

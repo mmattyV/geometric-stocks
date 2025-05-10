@@ -52,7 +52,6 @@ data/interim/
 models/checkpoints/
 *.pkl
 *.h5
-*.pt
 *.pth
 *.onnx
 

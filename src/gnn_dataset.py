@@ -288,24 +288,48 @@ def split_data_temporal(
     # Get all dates
     dates = log_returns.index.tolist()
     
-    # Calculate split points
-    n_dates = len(dates)
-    train_end = int(n_dates * train_ratio)
-    val_end = train_end + int(n_dates * val_ratio)
-    
-    # Split dates
-    train_dates = dates[:train_end]
-    val_dates = dates[train_end:val_end]
-    test_dates = dates[val_end:]
-    
-    logger.info(
-        f"Split data temporally: {len(train_dates)} train dates, "
-        f"{len(val_dates)} validation dates, {len(test_dates)} test dates"
-    )
+    # Create chronological splits
+    splits = create_chronological_splits(dates, train_ratio, val_ratio)
     
     # For now, return the same data for all splits
     # In the training script, we'll create features and labels for each date
-    return data, data, data, train_dates, val_dates, test_dates
+    return data, data, data, splits["train"], splits["val"], splits["test"]
+
+
+def create_chronological_splits(dates: List[pd.Timestamp], train_ratio: float, val_ratio: float) -> Dict[str, List[pd.Timestamp]]:
+    """Create proper chronological train, validation, and test splits for financial time series.
+
+    This ensures we respect the temporal nature of financial data - training
+    on past data and validating/testing on future data to avoid lookahead bias.
+
+    Args:
+        dates: List of timestamps in the dataset.
+        train_ratio: Ratio of data to use for training.
+        val_ratio: Ratio of data to use for validation.
+
+    Returns:
+        Dictionary with train, val, and test date lists.
+    """
+    # Sort dates to ensure chronological order
+    sorted_dates = sorted(dates)
+    
+    # Split according to the specified ratios while respecting time order
+    train_size = int(len(sorted_dates) * train_ratio)
+    val_size = int(len(sorted_dates) * val_ratio)
+    
+    train_dates = sorted_dates[:train_size]
+    val_dates = sorted_dates[train_size:train_size + val_size]
+    test_dates = sorted_dates[train_size + val_size:]
+    
+    logger.info(f"Train period: {min(train_dates).date()} to {max(train_dates).date()} ({len(train_dates)} days)")
+    logger.info(f"Validation period: {min(val_dates).date()} to {max(val_dates).date()} ({len(val_dates)} days)")
+    logger.info(f"Test period: {min(test_dates).date()} to {max(test_dates).date()} ({len(test_dates)} days)")
+    
+    return {
+        "train": train_dates,
+        "val": val_dates,
+        "test": test_dates
+    }
 
 
 def save_dataset(

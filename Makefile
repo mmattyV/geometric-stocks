@@ -1,4 +1,4 @@
-.PHONY: all setup download preprocess graph dataset train-gcn train-gat evaluate-gcn evaluate-gat full-gcn full-gat clean
+.PHONY: all setup download preprocess graph dynamic-graphs dataset train-gcn train-gat train-hadgnn evaluate-gcn evaluate-gat evaluate-hadgnn full-gcn full-gat full-hadgnn embedding-analysis clean
 
 # Define Python interpreter
 PYTHON = python
@@ -54,13 +54,34 @@ full-gcn:
 full-gat:
 	$(PYTHON) src/main.py full --config $(CONFIG) --model gat
 
-# Run both models
-all: evaluate-gcn evaluate-gat
+# Build dynamic graph sequences
+dynamic-graphs: preprocess
+	$(PYTHON) src/graph_sequence_builder.py --config $(CONFIG)
+
+# Train HAD-GNN model (will reuse existing dynamic graphs if available)
+train-hadgnn: preprocess
+	$(PYTHON) src/train_dynamic.py --config $(CONFIG)
+
+# Evaluate HAD-GNN model
+evaluate-hadgnn: train-hadgnn
+	$(PYTHON) src/evaluate.py --config $(CONFIG) --model hadgnn --processed-data-path $(DATA_DIR)/processed --graph-path $(DATA_DIR)/dynamic_graphs --model-path $(MODELS_DIR) --output-path $(RESULTS_DIR)
+
+# Run full HAD-GNN pipeline
+full-hadgnn: download preprocess dynamic-graphs train-hadgnn evaluate-hadgnn
+
+# Run embedding clustering analysis
+embedding-analysis: train-hadgnn
+	$(PYTHON) src/analysis/embedding_cluster.py --config $(CONFIG) --model-path $(MODELS_DIR)/hadgnn/best_model.pth --graph-path $(DATA_DIR)/dynamic_graphs --sector-path $(DATA_DIR)/processed/symbol_sectors.parquet --output-path $(RESULTS_DIR)/cluster_analysis
+	@echo "HAD-GNN pipeline completed successfully"
+
+# Run all models
+all: evaluate-gcn evaluate-gat evaluate-hadgnn
 
 # Clean generated files
 clean:
 	rm -rf $(DATA_DIR)/processed
 	rm -rf $(DATA_DIR)/graphs
+	rm -rf $(DATA_DIR)/dynamic_graphs
 	rm -rf $(MODELS_DIR)
 	rm -rf $(RESULTS_DIR)
 	find . -type d -name __pycache__ -exec rm -rf {} +

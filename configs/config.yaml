@@ -7,6 +7,10 @@ graph:
   corr_threshold: null  # Using top_k instead of threshold
   top_k: 20  # Increase connections per node
   use_mst: true  # force connectivity with minimum spanning tree
+  # Dynamic graph parameters
+  mode: "static"  # | "dynamic" | "dual"
+  window_size: 60    # Number of trading days per graph snapshot
+  step_size: 5      # Number of days to slide between snapshots
 model:
   type: "gcn"  # | "gat"
   hidden_dim: 16  # Drastically reduce model capacity
@@ -14,11 +18,11 @@ model:
   gat_heads: 8
   gat_dim_per_head: 8
 train:
-  epochs: 100   # Fewer epochs to prevent overfitting
+  epochs: 200   # More epochs with smaller learning rate
   batch_size: 1  # full-batch graph learning
-  lr: 1e-3      # Start with higher learning rate 
-  weight_decay: 5e-4  # Much stronger regularization
-  early_stop_patience: 10  # Stop earlier to prevent overfitting
+  lr: 5e-4      # Smaller learning rate for financial time series
+  weight_decay: 1e-4  # Slightly reduced regularization with smaller learning rate
+  early_stop_patience: 20  # More patience with slower learning
   random_seed: 42
 time_aware_training:
   enabled: true

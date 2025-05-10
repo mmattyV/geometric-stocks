@@ -89,8 +89,8 @@ def create_parser() -> argparse.ArgumentParser:
     parser.add_argument(
         "--model",
         type=str,
-        choices=["gcn", "gat"],
-        help="Model type (gcn or gat). Overrides config if provided.",
+        choices=["gcn", "gat", "hadgnn"],
+        help="Model type (gcn, gat, or hadgnn). Overrides config if provided.",
     )
     
     # Path arguments

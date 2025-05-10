@@ -64,3 +64,5 @@ configs/local_*.yaml
 
 # Kaggle
 kaggle.json
+
+.windsurfrules

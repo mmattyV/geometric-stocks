@@ -9,8 +9,9 @@
 \usepackage{natbib}
 \usepackage{enumitem}
 \usepackage{float}
+\usepackage{xcolor}
 
-\title{Geometric Deep Learning for Stock Market Co-Movements Analysis}
+\title{Geometric Stocks: Geometric Deep Learning for Stock Market Co-Movements Analysis}
 \author{Matthew Vu}
 \date{May 9, 2025}
 
@@ -149,24 +150,30 @@ We evaluated our models on next-day price movement prediction (binary classifica
 
 \subsubsection{Static GCN Analysis}
 
-Our initial static GCN implementation treated the stock market as a fixed structure across the entire dataset period, processing all data at once rather than accounting for temporal dynamics.
+Our initial static GCN treats the entire S\&P 500 universe as a \emph{time-invariant} graph, i.e.\ every daily return is propagated through one fixed adjacency matrix.  
+While this simplifies implementation, Figure \ref{fig:static_gcn_metrics} makes clear that such a simplification yields pronounced over-fitting.
 
 \begin{figure}[h]
     \centering
-    \includegraphics[width=0.9\textwidth]{../models/gcn/plots/expanded_metrics_plot.png}
-    \caption{Performance metrics across training epochs for the static GCN model, showing training and validation loss, along with balanced accuracy.}
+    \includegraphics[width=0.9\textwidth]{initial_attempt_gcn_static_notwindowed.png}
+    \caption{Training curves for the static GCN.  Top: loss; bottom: accuracy variants.}
     \label{fig:static_gcn_metrics}
 \end{figure}
 
-As shown in Figure \ref{fig:static_gcn_metrics}, the static GCN model exhibits several notable characteristics:
-
+\noindent\textbf{Key observations}
 \begin{itemize}
-    \item \textbf{Convergence Pattern}: Training loss steadily decreases over epochs, but validation loss plateaus after approximately 40 epochs, indicating potential memorization rather than generalization.
-    \item \textbf{Accuracy Ceiling}: The balanced accuracy metric struggles to exceed 0.55, suggesting limited predictive power when treating the market as a static entity.
-    \item \textbf{Validation Instability}: Noticeable fluctuations in validation metrics, particularly after epoch 60, reveal the model's sensitivity to the fixed graph structure when market conditions change.
+    \item \textbf{Loss divergence}.  
+          Training loss falls from $\approx0.71$ to $0.64$, yet \emph{validation} loss \emph{rises} from $0.70$ to $0.73$ within the first ten epochs and never recovers, signalling classic memorisation.
+    \item \textbf{Inflated in-sample accuracy}.  
+          Train balanced accuracy improves steadily, reaching $\approx0.63$ by epoch 60, whereas the \emph{validation} balanced accuracy oscillates tightly around $0.50$–$0.51$—no better than random guessing.
+    \item \textbf{Generalisation failure}.  
+          The widening gap between the blue/orange loss curves and the green/red accuracy curves shows that a static graph cannot adapt to regime shifts (e.g.\ draw-downs, rallies) embedded in the 250-day sample.
 \end{itemize}
 
-These observations highlight the fundamental limitation of static graph approaches for financial market modeling: real-world markets are inherently dynamic with evolving relationships. This motivated our progression to windowed and eventually hybrid-attention dynamic models.
+\medskip
+\noindent These results confirm that a single, immutable correlation graph is too rigid for financial data.  
+The model memorises idiosyncrasies of the training period, but those patterns do not extrapolate to unseen days.  
+This motivated our transition to \emph{rolling-window} graphs and ultimately to the \textit{Hybrid-Attention Dynamic GNN}, which explicitly encodes temporal evolution.
 
 \subsubsection{Windowed GCN Approach Analysis}
 
@@ -338,11 +345,15 @@ Liu, Y., Chen, Q., \& Zhou, Z. (2025).
 \textit{STGAT: Spatial–Temporal Graph Attention Network with Sentiment Signals for Stock Forecasting}.
 Applied Sciences, 15(4), 2256.
 
+\colorbox{yellow}{%
+\parbox{\linewidth}{%
 \bibitem{claude2025}
-Anthropic (2025).
-\textit{Claude 3.7 Sonnet}.
-Used for code development assistance and report writing through the Cascade platform.
-Available at: https://www.anthropic.com/claude
+Anthropic (2025).\\
+\textit{Claude 3.7 Sonnet}.\\
+Used for code development assistance and report writing through the Cascade platform.\\
+Available at: \texttt{https://www.anthropic.com/claude}
+}%
+}
 
 \end{thebibliography}
 
